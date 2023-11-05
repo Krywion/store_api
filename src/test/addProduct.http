@@ -1,0 +1,2 @@
+curl -v -X POST -F "title=Tytuł produktu" -F "price=29.99" -F "category=Kategoria produktu" -F "description=Opis produktu" -F "image=@curl -v -X POST -F "title=Tytuł produktu" -F "price=29.99" -F "category=Kategoria produktu" -F "description=Opis produktu" -F "image=@/Users/makskrywionek/Postman/files/Maks_zdjecie.jpg" http://localhost:8080/addproduct
+" http://localhost:8080/addproduct
