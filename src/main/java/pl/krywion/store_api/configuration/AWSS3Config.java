@@ -1,4 +1,4 @@
-package pl.krywion.store_api.aws;
+package pl.krywion.store_api.configuration;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
