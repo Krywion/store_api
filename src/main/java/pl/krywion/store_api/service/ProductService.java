@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -28,6 +29,7 @@ public class ProductService {
 
     public void addProduct(String title, Double price, String category, String description, MultipartFile image) {
         // copyying MultiPartFile to File
+        String extension = Objects.requireNonNull(image.getOriginalFilename()).substring(image.getOriginalFilename().lastIndexOf(".") + 1);
         File tempFile;
         try {
             tempFile = File.createTempFile("temp-image", ".jpg");
@@ -42,7 +44,7 @@ public class ProductService {
         }
 
         UUID uuid = UUID.randomUUID();
-        String imageAccessUrl = "https://storeapi-images.s3.eu-central-1.amazonaws.com/" + uuid + "." + "jpg";
+        String imageAccessUrl = "https://storeapi-images.s3.eu-central-1.amazonaws.com/" + uuid + "." + extension;
         String presignedUrl = fileService.generateUrl(uuid + "." + "jpeg", HttpMethod.PUT);
         fileService.sendFileToServer(presignedUrl, tempFile);
 
@@ -57,7 +59,7 @@ public class ProductService {
 
         String message = "Product added:\nTitle: " + title + "\nPrice: " + price + "\nCategory: " + category + "\nDescription: " + description + "\nImageAccessUrl: " + imageAccessUrl;
 
-        emailService.sendMail("szymon.wojakoss@gmail.com", "[WebStore] Added new product", message);
+        emailService.sendMail("krywionStoreAdNotif@gmail.com", "[WebStore] Added new product", message);
     }
 
 
