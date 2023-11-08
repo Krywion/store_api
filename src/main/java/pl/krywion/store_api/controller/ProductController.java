@@ -32,8 +32,10 @@ public class ProductController {
         return new ResponseEntity<>("Product added", HttpStatus.CREATED);
     }
 
+
     @GetMapping("/get-products")
     public ResponseEntity<List<Product>> getProducts(@RequestParam Integer amount) {
+        System.out.println("getProducts");
         return new ResponseEntity<>(productService.getProducts(amount), HttpStatus.OK);
     }
 
@@ -41,5 +43,7 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProductsOrder(@RequestParam Integer amount, @RequestParam String order) {
         return new ResponseEntity<>(productService.getProductsbYOrder(amount, order), HttpStatus.OK);
     }
+
+
 
 }

@@ -1,8 +1,10 @@
 package pl.krywion.store_api.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class Product {
 
     @Id

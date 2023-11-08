@@ -9,7 +9,6 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +20,14 @@ import java.util.Date;
 @Service
 public class FileService {
 
-    @Autowired
-    private AmazonS3 s3client;
+    private final AmazonS3 s3client;
 
     @Value("${aws.s3.bucketName}")
     private String bucketName;
+
+    public FileService(AmazonS3 s3client) {
+        this.s3client = s3client;
+    }
 
     public String generateUrl(String filename, HttpMethod http) {
         Calendar cal = Calendar.getInstance();
@@ -38,7 +40,7 @@ public class FileService {
     public void sendFileToServer(String presignedUrl, File file) {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPut httpPut = new HttpPut(presignedUrl);
-            httpPut.setHeader("Content-Type", "image/jpeg");
+            httpPut.setHeader("Content-Type", "image/jpg");
             FileEntity fileEntity = new FileEntity(file);
             httpPut.setEntity(fileEntity);
 

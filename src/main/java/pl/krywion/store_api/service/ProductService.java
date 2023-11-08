@@ -30,7 +30,7 @@ public class ProductService {
         // copyying MultiPartFile to File
         File tempFile;
         try {
-            tempFile = File.createTempFile("temp-image", ".png");
+            tempFile = File.createTempFile("temp-image", ".jpg");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -42,8 +42,8 @@ public class ProductService {
         }
 
         UUID uuid = UUID.randomUUID();
-        String imageAccessUrl = "https://storeapi-images.s3.eu-central-1.amazonaws.com/" + uuid + "." + "jpeg";
-        String presignedUrl = fileService.generateUrl(uuid + "." + "jpeg" , HttpMethod.PUT);
+        String imageAccessUrl = "https://storeapi-images.s3.eu-central-1.amazonaws.com/" + uuid + "." + "jpg";
+        String presignedUrl = fileService.generateUrl(uuid + "." + "jpeg", HttpMethod.PUT);
         fileService.sendFileToServer(presignedUrl, tempFile);
 
 
@@ -51,7 +51,7 @@ public class ProductService {
         productRepository.save(product);
 
 
-        if(!tempFile.delete()) {
+        if (!tempFile.delete()) {
             throw new RuntimeException("Failed to delete temp file");
         }
 
@@ -63,9 +63,9 @@ public class ProductService {
 
     public List<Product> getProducts(Integer amount) {
         return switch (amount) {
-            case 24 -> productRepository.find24();
-            case 36 -> productRepository.find36();
-            default -> productRepository.find12();
+            case 24 -> productRepository.findAmount(24);
+            case 36 -> productRepository.findAmount(36);
+            default -> productRepository.findAmount(12);
         };
     }
 
@@ -91,5 +91,6 @@ public class ProductService {
                 yield productRepository.findTop12ByOrderByPriceDesc();
             }
         };
+
     }
 }
