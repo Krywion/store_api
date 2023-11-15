@@ -2,6 +2,9 @@ package pl.krywion.store_api.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -26,6 +29,9 @@ public class Product {
 
     @Column(name = "image", nullable = false)
     private String image;
+
+    @Getter
+    private static List<String> categories = List.of("Kuchenne", "Chemia", "Elektronika", "Meble", "Samochód", "Oświetlenie", "Dekoracje"  );
 
     public Product(String title, Double price, String category, String description, String image) {
         this.title = title;

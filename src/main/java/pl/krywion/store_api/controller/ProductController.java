@@ -1,11 +1,9 @@
 package pl.krywion.store_api.controller;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.krywion.store_api.model.Product;
 import pl.krywion.store_api.service.ProductService;
@@ -33,16 +31,39 @@ public class ProductController {
     }
 
 
-    @GetMapping("/get-products")
-    public ResponseEntity<List<Product>> getProducts(@RequestParam Integer amount) {
+    @GetMapping("/get-products/{page}/{amount}")
+    public ResponseEntity<List<Product>> getProducts(
+            @PathVariable("page") Integer page,
+            @PathVariable("amount") Integer amount
+    ) {
         System.out.println("getProducts");
-        return new ResponseEntity<>(productService.getProducts(amount), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProducts(page, amount), HttpStatus.OK);
     }
 
-    @GetMapping("/get-products-order")
-    public ResponseEntity<List<Product>> getProductsOrder(@RequestParam Integer amount, @RequestParam String order) {
-        return new ResponseEntity<>(productService.getProductsbYOrder(amount, order), HttpStatus.OK);
+    @GetMapping("/get-products-by-category/{page}/{amount}/{category}")
+    public ResponseEntity<List<Product>> getProductsByCategory(
+            @PathVariable("page") Integer page,
+            @PathVariable("amount") Integer amount,
+            @PathVariable("category") String category) {
+        return new ResponseEntity<>(productService.getProductsByCategory(page, amount, category), HttpStatus.OK);
     }
+
+    @GetMapping("/get-products-category")
+    public ResponseEntity<List<String>> getProductsCategory() {
+        System.out.println(productService.getCategories());
+        return new ResponseEntity<>(productService.getCategories(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-products-count")
+    public ResponseEntity<Integer> getMaxPage() {
+        return new ResponseEntity<>(productService.getProductsCount(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-products-count/{category}")
+    public ResponseEntity<Integer> getMaxPageByCategory( @PathVariable("category") String category) {
+        return new ResponseEntity<>(productService.getProductsCountByCategory(category), HttpStatus.OK);
+    }
+
 
 
 

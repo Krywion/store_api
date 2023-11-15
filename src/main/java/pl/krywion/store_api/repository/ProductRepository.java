@@ -1,36 +1,23 @@
 package pl.krywion.store_api.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.krywion.store_api.model.Product;
 
-import java.util.List;
-
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
-    List<Product> findTop12ByOrderByPriceAsc();
+    @Query("SELECT p FROM Product p WHERE p.category = :category")
+    Page<Product> findByCategory(@Param("category") String category, Pageable pageable);
 
-    List<Product> findTop12ByOrderByPriceDesc();
+    @Query("SELECT COUNT (*) FROM Product WHERE category = :category")
+    Integer countByCategory(@Param("category") String category);
 
-
-    List<Product> findTop24ByOrderByPriceAsc();
-
-    List<Product> findTop24ByOrderByPriceDesc();
-
-    List<Product> findTop36ByOrderByPriceAsc();
-
-    List<Product> findTop36ByOrderByPriceDesc();
-
-    @Query(nativeQuery = true, value = "SELECT * FROM Product LIMIT :productAmount" )
-    List<Product> findAmount(@Param("productAmount") Integer productAmount);
-
-
-
-
-
-
+    @Query("SELECT COUNT (*) FROM Product")
+    Integer countAll();
 }

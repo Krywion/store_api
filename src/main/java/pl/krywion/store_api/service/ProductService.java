@@ -1,6 +1,9 @@
 package pl.krywion.store_api.service;
 
 import com.amazonaws.HttpMethod;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.krywion.store_api.model.Product;
@@ -63,36 +66,31 @@ public class ProductService {
     }
 
 
-    public List<Product> getProducts(Integer amount) {
-        return switch (amount) {
-            case 24 -> productRepository.findAmount(24);
-            case 36 -> productRepository.findAmount(36);
-            default -> productRepository.findAmount(12);
-        };
+    public List<Product> getProducts(Integer page, Integer amount) {
+        Pageable pageable = PageRequest.of(page, amount);
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.getContent();
     }
 
 
-    public List<Product> getProductsbYOrder(Integer amount, String order) {
-        return switch (amount) {
-            case 24 -> {
-                if (order.equals("asc")) {
-                    yield productRepository.findTop24ByOrderByPriceAsc();
-                }
-                yield productRepository.findTop24ByOrderByPriceDesc();
-            }
-            case 36 -> {
-                if (order.equals("asc")) {
-                    yield productRepository.findTop36ByOrderByPriceAsc();
-                }
-                yield productRepository.findTop36ByOrderByPriceDesc();
-            }
-            default -> {
-                if (order.equals("asc")) {
-                    yield productRepository.findTop12ByOrderByPriceAsc();
-                }
-                yield productRepository.findTop12ByOrderByPriceDesc();
-            }
-        };
-
+    public List<String> getCategories() {
+        return Product.getCategories();
     }
+
+    public List<Product> getProductsByCategory(Integer page, Integer amount, String category) {
+        Pageable pageable = PageRequest.of(page, amount);
+        Page<Product> products = productRepository.findByCategory(category, pageable);
+        return products.getContent();
+    }
+
+
+    public Integer getProductsCountByCategory(String category) {
+        return productRepository.countByCategory(category);
+    }
+
+    public Integer getProductsCount() {
+        return productRepository.countAll();
+    }
+
+
 }
